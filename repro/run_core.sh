@@ -19,7 +19,6 @@ Stages:
   resistance       Run DepMap/PRISM composites and STORM limma/GSEA
   spatial          Run spatial recovery, pathways, COMMOT/CCI and CORNETO
   serum_mofa       Run the serum MOFA downstream workflow
-  mouse            Compute animal population summaries and revision statistics
 
 Set LIUF_SPATIAL_RUN_VARIANT=raw_rctd_diagnostic to refit all 16 RCTD sections.
 Set MOFA_RUN_RAW_DIAGNOSTIC=1 and MOFA_FORCE_RETRAIN=1 to retrain the MOFA grid.
@@ -129,10 +128,6 @@ case "$1" in
     ;;
   serum_mofa)
     bash "${PROJECT_ROOT}/repro/pipelines/60_serum_mofa/run_all.sh"
-    ;;
-  mouse)
-    run_py repro/pipelines/70_mouse/72_rebuild_treatment_groups.py
-    run_py repro/pipelines/70_mouse/73_revision_statistics.py
     ;;
   *)
     printf 'Unknown stage: %s\n\n' "$1" >&2

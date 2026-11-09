@@ -1,2 +1,0 @@
-group,sample_id,analysis_status,reason,basis
-E,21,exclude,"Not a sample from this experiment; remove this external worksheet record from every animal analysis.","User confirmed on 2026-09-10 that E-21 is not a sample from this experiment. This is an analysis-population correction, not an outcome-based exclusion."

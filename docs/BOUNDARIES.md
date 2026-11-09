@@ -68,7 +68,6 @@ this computation-only snapshot; figure/pixel comparisons are not included.
   COMMOT caches, patient-balanced CCI and CORNETO routes.
 - `repo/results/60_serum_mofa`: MOFA models, TCGA axes, survival, classifier
   and supplemental tables.
-- `repo/results/70_mouse`: per-animal, group, pairwise and contrast tables.
 - `repo/audit`: input hashes, seed declarations, runtimes and repeatability
   receipts.
 

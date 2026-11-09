@@ -113,25 +113,13 @@ The KEGG compound-to-pathway table is tracked at
 CellChat ligand/receptor table is read from the installed `commot` package and
 its hash is recorded.
 
-## Animal workbook
-
-```text
-repo/data/private/raw/mouse/小鼠样本图片及送样单/终末取材数据.xlsx
-```
-
-The small population exclusion ledger is tracked in two mirrored locations to
-preserve the original consistency check. It is a curation record, not a raw
-endpoint table.
-
 ## Small inputs included with the code
 
 Only fixed annotation/curation or knowledge inputs are included:
 
 - cluster-to-state annotation CSVs and raw-derived overlay maps;
 - `repo/data/curation/resistance/HepC_signatures_main.gmt`;
-- the animal population exclusion ledger;
 - the KEGG compound-to-pathway TSV.
 
-No patient-level clinical workbook, animal endpoint workbook, raw expression
-matrix, Seurat RDS, RCTD weight, MOFA model, COMMOT cache, or final result table
-is included.
+No patient-level clinical workbook, raw expression matrix, Seurat RDS, RCTD
+weight, MOFA model, COMMOT cache, or final result table is included.

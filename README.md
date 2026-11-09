@@ -8,7 +8,8 @@ scoring, and custom cell-state/module projections.
 This repository intentionally contains **no plotting, figure-rendering,
 pixel-comparison, or page-assembly code**. Numerical results are written as
 CSV, TSV, JSON, RDS, HDF5, or H5AD files. Raw/private matrices and frozen final
-result objects are not published here.
+result objects are not published here. Animal-specific statistical workflows
+and their dedicated inputs are intentionally excluded from this snapshot.
 
 ## Workflow map
 
@@ -24,7 +25,6 @@ result objects are not published here.
 | Spatial analysis | RCTD, CM recovery, radial profiles, pathway scores, COMMOT, LR-aware CCI | `repro/pipelines/50_spatial_cci/` |
 | CORNETO | Curated MAPK prior network, expression-gated routes, solver repeatability | `repro/pipelines/50_spatial_cci/80_corneto_mapk.py` |
 | Serum MOFA | Strict-monotonic input, K grid/final model training, TCGA axes and classifier | `repro/pipelines/60_serum_mofa/` |
-| Animal statistics | Population accounting, group summaries, Welch/Holm and planned contrasts | `repro/pipelines/70_mouse/` |
 
 ## Requirements
 
@@ -68,8 +68,6 @@ bash repro/run_core.sh bulk_projection
 bash repro/run_core.sh tissue
 bash repro/run_core.sh resistance
 
-# Animal population and endpoint statistics
-bash repro/run_core.sh mouse
 ```
 
 High-cost branches are explicit and are never launched by `--list`:
@@ -114,7 +112,6 @@ step-specific seeds are preserved when they affect accepted results.
 | COMMOT | Master seed plus canonical section index |
 | CORNETO/HiGHS | Solver seed 0, one thread, two isolated complete runs |
 | MOFA | Model seed 1; K-scan seeds 1–6 |
-| Animal statistics | Deterministic; no stochastic operation |
 
 Additional per-stage seeds and RNG kinds are recorded in the scripts and the
 generated `repo/audit` tables. A seed declaration alone is not presented as
