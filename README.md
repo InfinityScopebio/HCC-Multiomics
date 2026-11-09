@@ -1,8 +1,7 @@
 # HCC Multi-omics Analysis Workflows
 
-Reproducible R and Python workflows for hepatocellular carcinoma multi-omics
-research. The repository covers CoVarNet, MuSiC, RCTD, COMMOT, CORNETO, MOFA,
-pathway scoring, and custom cell-state/module projections.
+Analysis code used in the HCC multi-omics manuscript, implemented in R and
+Python.
 
 ## Repository layout
 
@@ -21,9 +20,9 @@ The main subdivisions under `code/` are `pipelines/`, `vendor/`, `lib/`,
 inventories to `manifests/`. These output directories are excluded from version
 control.
 
-## Analysis modules
+## Analysis code used in the manuscript
 
-| Stage | Main computations |
+| Analysis code | Main computations |
 |---|---|
 | `preprocess` | Sample sheet and eight tissue/serum M0 matrices |
 | `scrna_atlas` | Raw-count ingestion, RPCA/Harmony integration, subtype reconstruction |
