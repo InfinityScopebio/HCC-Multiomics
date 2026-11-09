@@ -5,16 +5,16 @@ __pycache__/
 .r2m10-generated
 
 # Local inputs and generated outputs are never published.
-repo/data/private/
-repo/data/public/
-repo/data/validation/
-repo/data/curation/scRNA/
-repo/data/curation/spatial/
-repo/data/curation/serum_mofa/
-repo/results/
-repo/logs/
-repo/audit/
-repo/manifests/
+data/private/
+data/public/
+data/validation/
+data/curation/scRNA/
+data/curation/spatial/
+data/curation/serum_mofa/
+/results/
+/audit/
+/logs/
+/manifests/
 
 # Local runtime and review files.
 .kimi_home/
