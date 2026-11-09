@@ -8,8 +8,7 @@ scoring, and custom cell-state/module projections.
 This repository intentionally contains **no plotting, figure-rendering,
 pixel-comparison, or page-assembly code**. Numerical results are written as
 CSV, TSV, JSON, RDS, HDF5, or H5AD files. Raw/private matrices and frozen final
-result objects are not published here. Animal-specific statistical workflows
-and their dedicated inputs are intentionally excluded from this snapshot.
+result objects are not published here.
 
 ## Workflow map
 
