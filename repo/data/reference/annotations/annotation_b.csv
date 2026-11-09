@@ -1,0 +1,7 @@
+0,naiveB,TCL1A IGHD FCER2 CD37 CD79A CD79B
+1,memoryB,TNFRSF13B GPR183 CLECL1 HERPUD1 NR4A2
+2,naiveB,RPS_RPL_high (merged to naive)
+3,rm,LiuF_batch_lncRNA
+4,rm,Tcell_contamination
+5,rm,cDC2_contamination
+6,rm,IEG_stress

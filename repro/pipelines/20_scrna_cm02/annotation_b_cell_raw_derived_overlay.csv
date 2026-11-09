@@ -1,0 +1,7 @@
+0,naiveB,raw-derived TCL1A IGHD CD79B FCER2 IGHM naive B-cell profile
+1,memoryB,raw-derived GPR183 HERPUD1 NR4A2 LY9 memory B-cell profile
+2,memoryB,raw-derived IGHG1 IGHG3 IGHA1 class-switched memory B-cell profile
+3,naiveB,raw-derived AFF3 BACH2 EBF1 PRKCB naive B-cell profile
+4,rm,raw-derived IL32 CCL5 NKG7 TRAC CD3D T-cell contamination
+5,memoryB,raw-derived GPR183 MS4A1 FCRL5 HLA-DPA1 memory B-cell profile
+6,rm,raw-derived GAPDH ARPC1B COTL1 PFN1 low-information stress cluster

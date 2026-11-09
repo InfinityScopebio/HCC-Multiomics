@@ -1,0 +1,11 @@
+0,Kupffer,raw-derived CD5L MARCO VCAM1 SLC40A1 CD163 resident Kupffer profile
+1,Monocytes,raw-derived LYZ MNDA CLEC10A LGALS2 CD37 monocyte profile
+2,SPP1+M_,raw-derived SPP1 LGALS1 FABP5 APOC1 ANXA2 LGALS3 macrophage profile
+3,IL1B+M_,raw-derived CXCL8 CXCL2 CXCL3 inflammatory macrophage profile
+4,TREM2+M_,raw-derived APOE GPNMB ACP5 LGMN PLD3 TREM2 macrophage profile
+5,rm,raw-derived CCL5 NKG7 CD3D KLRB1 T-cell contamination
+6,Kupffer,raw-derived C1QA C1QB C1QC FOLR2 CD14 resident macrophage profile
+7,Kupffer,raw-derived CD5L VCAM1 SLC40A1 MARCO CD163 resident stress-response profile
+8,Kupffer,raw-derived FOLR2 C1QA C1QB C1QC CD14 resident macrophage profile
+9,CXCL10+M_,raw-derived CXCL10 CXCL9 CXCL11 GBP1 STAT1 interferon macrophage profile
+10,rm,raw-derived APOA2 ALB RBP4 APOA1 APOC3 hepatocyte contamination

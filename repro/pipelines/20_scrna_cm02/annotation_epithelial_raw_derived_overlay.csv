@@ -1,0 +1,6 @@
+0,Cholangiocyte,raw-derived KRT7 TACSTD2 CXCL1 epithelial immediate-early cholangiocyte profile
+1,Cholangiocyte,raw-derived FXYD2 DEFB1 mitochondrial-high epithelial cholangiocyte profile
+2,Cholangiocyte,raw-derived KRT8 TACSTD2 MMP7 KRT7 TM4SF1 ANXA4 cholangiocyte profile
+3,Hepatocyte,raw-derived APOA2 LDHA PLIN2 BNIP3 NDUFA4L2 APOC3 hepatocyte profile
+4,Hepatocyte,raw-derived APOA2 APOE SPINK1 APOC1 ORM1 cycling-stress hepatocyte profile
+5,rm,raw-derived SRGN S100A4 CCL4 CCL5 NKG7 CD3D immune contamination

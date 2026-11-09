@@ -1,0 +1,10 @@
+0,retain,raw-derived HP SAA1 CYP2E1 TAT hepatocyte profile
+1,retain,raw-derived HPX SERPINC1 FGA APOB PLG APOH mature hepatocyte profile
+2,retain,raw-derived ALB APOE VTN AGT immediate-early hepatocyte profile
+3,retain,raw-derived GSTA1 FABP1 APOA2 APOC1 hepatocyte metabolic profile
+4,retain,raw-derived STMN1 PCNA RRM2 TK1 replication hepatocyte profile
+5,retain,raw-derived CPS1 TAT MAT1A PCK1 CYP2C8 hepatocyte profile
+6,retain,raw-derived PTTG1 UBE2C BIRC5 TOP2A CDC20 cycling hepatocyte profile
+7,retain,raw-derived LDHA NDRG1 BNIP3 PLOD2 hypoxia hepatocyte profile
+8,retain,raw-derived PTTG1 STMN1 BIRC5 proliferative-stress hepatocyte profile
+9,rm,raw-derived SRGN CCL5 NKG7 IGKC ARHGDIB immune contamination

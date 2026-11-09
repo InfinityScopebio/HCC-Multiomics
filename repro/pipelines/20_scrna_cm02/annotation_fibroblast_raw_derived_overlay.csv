@@ -1,0 +1,12 @@
+0,SMC,raw-derived MYH11 TAGLN ACTA2 MYL9 TPM2 smooth-muscle profile
+1,Pericyte,raw-derived RGS5 FABP4 IGFBP5 MYH11 ACTA2 pericyte profile
+2,HSC,raw-derived LUM DCN COL1A1 COL3A1 COL1A2 RARRES2 hepatic stellate profile
+3,Pericyte,raw-derived THY1 RGS5 CD36 COL4A1 HIGD1B pericyte profile
+4,Pericyte,raw-derived RGS5 IGFBP5 TM4SF1 immediate-early pericyte profile
+5,Pericyte,raw-derived RGS5 FABP4 NDUFA4L2 GPX3 COX4I2 pericyte profile
+6,rm,raw-derived PTPRC CCL5 NKG7 IL32 T-cell contamination
+7,rm,raw-derived KRT19 KRT8 SLPI epithelial contamination
+8,SMC,raw-derived MFAP4 TAGLN ACTA2 MGP PDLIM3 smooth-muscle profile
+9,rm,raw-derived HLA-DRA CD74 C1QA C1QB TYROBP LYZ macrophage contamination
+10,rm,raw-derived FCN3 GNG11 CLDN5 RAMP2 RNASE1 VWF PECAM1 KDR endothelial contamination
+11,HSC,raw-derived COL3A1 LUM COL4A1 FSTL1 COL6A3 COL1A2 DCN RBP1 hepatic stellate profile

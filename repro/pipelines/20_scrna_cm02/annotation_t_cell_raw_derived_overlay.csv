@@ -1,0 +1,10 @@
+0,CD4+Tn,raw-derived IL7R LTB CD52 quiescent CD4 T-cell profile
+1,CD8+Tem,raw-derived CD8 effector-memory signature with CMC1 NKG7 CD8A
+2,MAIT,raw-derived KLRB1 SLC4A10 NCR3 CCR6 CXCR6 MAIT profile
+3,CD4+Tn,raw-derived IL7R CD40LG THEMIS quiescent CD4 T-cell profile
+4,CD8+Tem,raw-derived CCL5 CCL4 NKG7 GZMK CD8A effector-memory profile
+5,gdT,raw-derived TRGC2 KLRD1 CCL5 CCL4 gamma-delta T-cell profile
+6,CD8+Trm,raw-derived XCL1 XCL2 CD8A ZNF683 tissue-resident cytotoxic profile
+7,rm,raw-derived HSPA1A HSPA1B DNAJB1 HSP90AA1 stress cluster
+8,Treg,raw-derived CTLA4 TIGIT IKZF2 TNFRSF18 TNFRSF4 ICOS regulatory T-cell profile
+9,MAIT,raw-derived KLRB1 AREG IL7R TMIGD2 innate-like T-cell profile

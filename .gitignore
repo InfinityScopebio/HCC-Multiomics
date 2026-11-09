@@ -1,0 +1,22 @@
+.DS_Store
+.Rhistory
+__pycache__/
+*.py[cod]
+.r2m10-generated
+
+# Local inputs and generated outputs are never published.
+repo/data/private/
+repo/data/public/
+repo/data/validation/
+repo/data/curation/scRNA/
+repo/data/curation/spatial/
+repo/data/curation/serum_mofa/
+repo/results/
+repo/logs/
+repo/audit/
+repo/manifests/
+
+# Local runtime and review files.
+.kimi_home/
+.codex/
+review/

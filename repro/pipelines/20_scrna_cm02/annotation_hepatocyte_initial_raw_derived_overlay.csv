@@ -1,0 +1,10 @@
+0,Hepatocyte,raw-derived HPX HP APOH APOA1 FGA TF TTR mature hepatocyte profile
+1,Hepatocyte,raw-derived SAA1 SAA2 TAT MAT1A CYP2E1 acute-phase hepatocyte profile
+2,Hepatocyte,raw-derived GSTA1 FABP1 APOA2 APOC1 SERPINA1 hepatocyte profile
+3,Hepatocyte,raw-derived ALB APOE VTN AGT AMBP immediate-early hepatocyte profile
+4,Hepatocyte,raw-derived PTTG1 STMN1 BIRC5 UBE2C CDC20 CDKN3 cycling hepatocyte profile
+5,rm,raw-derived SRGN CORO1A ARHGDIB CCL5 CD52 immune contamination
+6,Hepatocyte,raw-derived STMN1 TUBA1B PCNA RRM2 TK1 cycling hepatocyte profile
+7,Hepatocyte,raw-derived BNIP3 ENO1 NDRG1 PLOD2 NUPR1 hypoxia hepatocyte profile
+8,rm,raw-derived IGHG1 IGHG4 IGKC MZB1 JCHAIN plasma-cell contamination
+9,rm,raw-derived TYROBP HLA-DRA CD74 C1QA C1QB macrophage contamination

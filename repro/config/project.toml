@@ -1,0 +1,27 @@
+[project]
+name = "HCC-Multiomics"
+repo_dir = "repo"
+repro_dir = "repro"
+
+[paths]
+private_raw_source = "报告/data"
+data_dir = "repo/data"
+result_dir = "repo/results"
+log_dir = "repo/logs"
+audit_dir = "repo/audit"
+manifest_dir = "repo/manifests"
+
+[validation]
+numeric_absolute_tolerance = 1e-8
+numeric_relative_tolerance = 1e-6
+require_sample_order = true
+require_feature_order = true
+
+[execution]
+default_seed = 20260807
+threads = 1
+fail_fast = true
+network_access = "fallback_only"
+public_data_policy = "local_first"
+allow_public_downloads = true
+require_download_allowlist = true

@@ -1,0 +1,28 @@
+0,T,raw-derived IL7R LTB TRAC CD3D CD3E T-cell profile
+1,T,raw-derived CCL5 NKG7 GZMK CD3D CD8A cytotoxic T-cell profile
+2,NK,raw-derived NKG7 KLRB1 CCL4 XCL1 KLRD1 NK profile
+3,T,raw-derived IL7R CD69 KLRB1 TRAC CD3D T-cell profile
+4,Neutrophil,raw-derived S100A9 S100A8 LYZ TYROBP FCN1 myeloid-neutrophil profile
+5,Endothelial,raw-derived IGFBP7 SPARCL1 GNG11 PLVAP RAMP2 endothelial profile
+6,Macrophage,raw-derived HLA-DRA C1QA C1QB C1QC TYROBP macrophage profile
+7,NK,raw-derived GNLY NKG7 GZMB PRF1 FGFBP2 cytotoxic NK profile
+8,Hepatocyte,raw-derived ALB APOA2 APOC1 APOC3 TTR hepatocyte profile
+9,Hepatocyte,raw-derived APOA2 APOC1 ALB APOA1 TTR hepatocyte profile
+10,Macrophage,raw-derived C1QA C1QB C1QC CD5L SLC40A1 resident macrophage profile
+11,Cholangiocyte,raw-derived SERPINA1 CLU TM4SF4 KRT18 ANXA4 KRT8 cholangiocyte-like epithelial profile
+12,B,raw-derived HLA-DRA CD79A CD74 MS4A1 IGKC B-cell profile
+13,NK,raw-derived NKG7 GNLY GZMH CCL5 GZMB cytotoxic NK profile
+14,mixed_curation,raw-derived cycling mixed cluster requiring cell-level hepatocyte gate
+15,Plasma,raw-derived IGKC IGHG JCHAIN MZB1 plasma-cell profile
+16,Fibroblast,raw-derived TAGLN ACTA2 MYL9 RGS5 stromal mural-cell profile
+17,cDC2,raw-derived HLA-DRA HLA-DPA1 CST3 LYZ dendritic-cell profile
+18,T,raw-derived IL32 TRAC CTLA4 CD3D TIGIT ICOS TNFRSF18 T-cell profile
+19,LSEC,raw-derived FCN3 CLEC4G CLEC1B liver sinusoidal endothelial profile
+20,mixed_curation,raw-derived mixed cluster requiring cell-level mast-cell gate
+21,Endothelial,raw-derived IFI27 TM4SF1 CLDN5 RAMP2 SPARCL1 GNG11 endothelial profile
+22,Fibroblast,raw-derived DCN BGN LUM COL3A1 COL1A1 fibroblast profile
+23,cDC1,raw-derived HLA-DPA1 HLA-DRA CD74 CLEC9A BATF3 dendritic-cell profile
+24,cDC2,raw-derived HLA-DRA CST3 LYZ AIF1 dendritic-cell profile
+25,pDC,raw-derived GZMB JCHAIN GPR183 IRF7 PLD4 LILRA4 plasmacytoid dendritic-cell profile
+26,Endothelial,raw-derived CCL21 GNG11 PECAM1 VWF MMRN1 EGFL7 endothelial profile
+27,mixed_curation,raw-derived mixed KLRB1 IL7R AREG KIT cluster requiring cell-level TCR gate
