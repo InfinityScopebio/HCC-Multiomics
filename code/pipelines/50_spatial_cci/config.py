@@ -43,7 +43,6 @@ class SpatialConfig:
     project_root: Path
     run_variant: str = "article_equivalent"
     master_seed: int = 20260807
-    historical_plot_seed: int = 1
     corneto_solver_seed: int = 0
     threads: int = 1
     commot_cache_version: str = "historical_rctd_cm02_barcode_v4"
@@ -315,14 +314,6 @@ class SpatialConfig:
         return self.result_root / "corneto"
 
     @property
-    def panel_root(self) -> Path:
-        return self.result_root / "panels"
-
-    @property
-    def validation_result_root(self) -> Path:
-        return self.result_root / "validation"
-
-    @property
     def rscript(self) -> Path:
         return Path(
             os.environ.get("LIUF_RSCRIPT", "/usr/local/bin/Rscript")
@@ -438,8 +429,6 @@ class SpatialConfig:
             self.commot_root,
             self.cci_root,
             self.corneto_root,
-            self.panel_root,
-            self.validation_result_root,
         ):
             path.mkdir(parents=True, exist_ok=True)
 

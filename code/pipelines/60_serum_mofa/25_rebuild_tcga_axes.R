@@ -19,6 +19,25 @@ script_dir <- dirname(
 )
 source(file.path(script_dir, "config.R"))
 cfg <- load_pipeline_config()
+msigdb_version <- Sys.getenv("MOFA_MSIGDB_VERSION", unset = "2025.1.Hs")
+msigdb_cache <- file.path(
+  tools::R_user_dir("msigdbr", which = "cache"),
+  "msigdb.2025.1.Hs.rds"
+)
+if (!file.exists(msigdb_cache) ||
+    unname(tools::md5sum(msigdb_cache)) !=
+      "d898c396b109d61ef9b20b0632f0bfa7") {
+  stop("The validated local MSigDB 2025.1.Hs cache is missing or invalid; no download is permitted.")
+}
+msigdb_release <- function(...) {
+  table <- msigdbr::msigdbr(...)
+  observed_version <- unique(as.character(table$db_version))
+  if (length(observed_version) != 1L ||
+      !identical(observed_version, msigdb_version)) {
+    stop("Unexpected MSigDB release: ", paste(observed_version, collapse = ";"))
+  }
+  table
+}
 
 input_path <- cfg$raw_input_path
 expression_path <- file.path(cfg$tcga_raw_dir, "LIHC_HiSeqV2.gz")
@@ -107,13 +126,13 @@ metabolite_kegg <- vapply(
   1
 )
 
-hallmark <- msigdbr(species = "Homo sapiens", collection = "H")
-kegg <- msigdbr(
+hallmark <- msigdb_release(species = "Homo sapiens", collection = "H")
+kegg <- msigdb_release(
   species = "Homo sapiens",
   collection = "C2",
   subcollection = "CP:KEGG_LEGACY"
 )
-reactome <- msigdbr(
+reactome <- msigdb_release(
   species = "Homo sapiens",
   collection = "C2",
   subcollection = "CP:REACTOME"
@@ -124,6 +143,22 @@ gene_set_table <- rbind(
   reactome[, c("gs_name", "gene_symbol")]
 )
 term_to_gene <- as.data.frame(gene_set_table)
+fwrite(
+  term_to_gene,
+  file.path(cfg$result_dir, "mofa_msigdb_gene_sets.tsv"),
+  sep = "\t"
+)
+fwrite(
+  data.table(
+    db_version = msigdb_version,
+    msigdbr_package_version = as.character(packageVersion("msigdbr")),
+    gene_sets_sha256 = sha256_file(
+      file.path(cfg$result_dir, "mofa_msigdb_gene_sets.tsv")
+    )
+  ),
+  file.path(cfg$result_dir, "mofa_msigdb_version.tsv"),
+  sep = "\t"
+)
 gene_sets <- split(gene_set_table$gene_symbol, gene_set_table$gs_name)
 
 kegg_source <- unique(as.data.frame(kegg[, c("gs_name", "gs_exact_source")]))
@@ -533,6 +568,9 @@ audit <- data.table(
     ifelse(pathway_padj_difference <= 1e-12, "numeric_exact", "numeric_mismatch"),
     "exact"
   ),
+  source_model_path = cfg$analysis_model_path,
+  source_model_sha256 = sha256_file(cfg$analysis_model_path),
+  source_input_sha256 = sha256_file(cfg$raw_input_path),
   observed = c(
     sprintf(
       "max_abs_magnitude_diff=%.3g",

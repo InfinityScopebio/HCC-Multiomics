@@ -429,7 +429,7 @@ audit <- data.table(
     ifelse(comparison_diff <= 1e-12, "numeric_exact", "numeric_mismatch"),
     ifelse(performance_diff <= 1e-12, "numeric_exact", "numeric_mismatch"),
     permutation_status,
-    "caveat"
+    "informational"
   ),
   observed = c(
     paste(selected_features, collapse = ";"),

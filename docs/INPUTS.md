@@ -94,8 +94,7 @@ data/public/raw/HCC-ST/*/spatial/tissue_hires_image.png
 ```
 
 The raw-RCTD branch additionally requires the curated scRNA reference above.
-The tissue image is used for input auditing, not by this computation-only
-snapshot for rendering.
+The tissue image is used only for input auditing.
 
 ## Knowledge resources
 
@@ -112,6 +111,11 @@ The KEGG compound-to-pathway table is tracked at
 `data/reference/KEGG/kegg_cpd_pathway.tsv`. COMMOT's bundled human
 CellChat ligand/receptor table is read from the installed `commot` package and
 its hash is recorded.
+
+STORM and serum MOFA also require `msigdb.2025.1.Hs.rds` in the local cache
+reported by `tools::R_user_dir("msigdbr", which = "cache")` in R. The scripts
+verify that cache and its MD5 before calling `msigdbr`; missing or mismatched
+data are fatal rather than downloaded at runtime.
 
 ## Small inputs included with the code
 

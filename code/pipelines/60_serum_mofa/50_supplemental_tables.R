@@ -388,6 +388,9 @@ audit <- data.table(
       "not_run"
     )
   ),
+  source_model_path = cfg$analysis_model_path,
+  source_model_sha256 = sha256_file(cfg$analysis_model_path),
+  source_input_sha256 = sha256_file(cfg$raw_input_path),
   observed = c(
     paste(selected_factors, collapse = ";"),
     sprintf("rows=%d; max_abs_diff=%.3g", nrow(loading_table), loading_diff),
@@ -412,17 +415,16 @@ audit <- data.table(
     "Selection uses raw Cox P, raw post-selection log-rank P and concordant HR direction.",
     paste(
       "All scores and loadings retain the native K15 model orientation.",
-      "The checksum-locked article model preserves all 240 top-feature labels,",
+      "The selected analysis model preserves all 240 top-feature labels,",
       "ranks and signs; numeric validation is performed at full precision."
     ),
     paste(
-      "Figure S5 is intentionally unchanged. Native article-model ORA directions",
-      "are mapped to the prior progression-aligned display contract before the",
-      "unchanged legacy renderer is called; Factor2 remains in Figure 6D only."
+      "Supplemental outputs are numerical tables only.",
+      "Native analysis-model statistics are unchanged."
     ),
     ifelse(
       pathways_from_raw_local_rebuild,
-      "The exact local rebuild used msigdbr 25.1.1, recorded in mofa_runtime.tsv.",
+      "The local rebuild used the MSigDB release recorded in mofa_msigdb_version.tsv.",
       "A full run should pin the exact MSigDB release before claiming de novo ORA identity."
     )
   )
@@ -436,7 +438,7 @@ fwrite(
 cat(
   sprintf(
     paste0(
-      "Supplemental tables completed from the historical article K15 model; ",
+      "Supplemental tables completed from the selected K15 analysis model; ",
       "selection diff=%.12g, loading diff=%.12g, labels_exact=%s.\n"
     ),
     selection_diff,

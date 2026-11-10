@@ -25,7 +25,6 @@ result_root <- spatial_result_root()
 raw_root <- assert_production_path(
   file.path(root, "data", "public", "raw", "HCC-ST")
 )
-weight_root <- assert_production_path(file.path(result_root, "rctd", "weights"))
 recovery_path <- assert_production_path(
   file.path(result_root, "cm_recovery", "CM_recover.rds")
 )
@@ -38,7 +37,7 @@ recovery <- readRDS(recovery_path)
 components <- cm02_rctd_types()
 
 radial_section <- function(section) {
-  weight_path <- file.path(weight_root, paste0(section, "_weights.rds"))
+  weight_path <- active_rctd_weight_path(section)
   if (!file.exists(weight_path)) {
     stop("Missing production RCTD weights: ", weight_path)
   }

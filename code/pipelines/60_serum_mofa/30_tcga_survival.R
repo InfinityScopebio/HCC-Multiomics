@@ -369,6 +369,9 @@ audit <- data.table(
       "mismatch"
     )
   ),
+  source_model_path = cfg$analysis_model_path,
+  source_model_sha256 = sha256_file(cfg$analysis_model_path),
+  source_input_sha256 = sha256_file(cfg$raw_input_path),
   observed = c(
     paste(
       nrow(axis_survival),
@@ -378,7 +381,7 @@ audit <- data.table(
       factor_cohort_exact
     ),
     sprintf("max_abs_diff=%.3g", numeric_max_diff),
-    "surv_cutpoint raw log-rank plus Lau94 and BH values retained",
+    "maximally selected log-rank cutpoint with Lau94 and BH values retained",
     paste(unique(statistics$n_survival), "cases,", unique(statistics$events), "events")
   ),
   note = c(

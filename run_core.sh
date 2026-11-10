@@ -21,7 +21,8 @@ Stages:
   serum_mofa       Run the serum MOFA downstream workflow
 
 Set LIUF_SPATIAL_RUN_VARIANT=raw_rctd_diagnostic to refit all 16 RCTD sections.
-Set MOFA_RUN_RAW_DIAGNOSTIC=1 and MOFA_FORCE_RETRAIN=1 to retrain the MOFA grid.
+Set MOFA_ANALYSIS_SOURCE=raw_derived, MOFA_RUN_RAW_DIAGNOSTIC=1, and
+MOFA_FORCE_RETRAIN=1 to retrain the MOFA grid.
 EOF
 }
 
@@ -36,6 +37,10 @@ cd "${PROJECT_ROOT}"
 
 R="${LIUF_RSCRIPT}"
 PYTHON="${LIUF_PYTHON}"
+if [[ -n "${LIUF_C2L_PYTHON:-}" && ! -x "${LIUF_C2L_PYTHON}" ]]; then
+  printf 'LIUF_C2L_PYTHON is not executable: %s\n' "${LIUF_C2L_PYTHON}" >&2
+  exit 1
+fi
 SPATIAL_PYTHON="${LIUF_C2L_PYTHON:-${HOME}/miniconda3/envs/c2l/bin/python}"
 if [[ ! -x "${SPATIAL_PYTHON}" ]]; then
   SPATIAL_PYTHON="python3"
@@ -60,6 +65,28 @@ run_spatial_py() {
   shift
   printf '[core] %s %s\n' "${SPATIAL_PYTHON}" "${script} $*"
   "${SPATIAL_PYTHON}" "${PROJECT_ROOT}/${script}" "$@"
+}
+
+verify_spatial_runtime() {
+  "${SPATIAL_PYTHON}" - <<'PY'
+from importlib import import_module
+from importlib.metadata import version
+
+required = {
+    "scanpy": "1.11.5",
+    "commot": "0.0.3",
+    "corneto": "0.9.1a6",
+}
+for name, expected in required.items():
+    try:
+        module = import_module(name)
+    except ImportError as error:
+        raise SystemExit(f"Missing spatial dependency {name}: {error}")
+    observed = version(name)
+    if observed != expected:
+        raise SystemExit(f"{name} {observed} does not match required {expected}")
+    print(f"{name}={observed}")
+PY
 }
 
 case "$1" in
@@ -108,10 +135,11 @@ case "$1" in
     run_r code/pipelines/40_tissue_resistance/41_rebuild_storm_gsea.R
     ;;
   spatial)
+    verify_spatial_runtime
     export LIUF_SPATIAL_RUN_VARIANT="${LIUF_SPATIAL_RUN_VARIANT:-article_equivalent}"
     run_spatial_py code/pipelines/50_spatial_cci/01_raw_visium_qc.py
     if [[ "${LIUF_SPATIAL_RUN_VARIANT}" == "raw_rctd_diagnostic" ]]; then
-      run_r code/pipelines/50_spatial_cci/10_rctd_from_raw.R
+      run_r code/pipelines/50_spatial_cci/10_rctd_from_raw.R --force
     else
       run_spatial_py code/pipelines/50_spatial_cci/10_validate_historical_intermediates.py
     fi
@@ -119,9 +147,9 @@ case "$1" in
     run_r code/pipelines/50_spatial_cci/30_radial_from_raw.R
     run_r code/pipelines/50_spatial_cci/40_pathway_scores_from_raw.R
     run_r code/pipelines/50_spatial_cci/41_merge_cm02_pathways.R
-    run_r code/pipelines/50_spatial_cci/50_export_scrna_profiles.R
     run_spatial_py code/pipelines/50_spatial_cci/49_cellchat_database.py
-    run_spatial_py code/pipelines/50_spatial_cci/51_commot_from_raw.py
+    run_r code/pipelines/50_spatial_cci/50_export_scrna_profiles.R
+    run_spatial_py code/pipelines/50_spatial_cci/51_commot_from_raw.py --force
     run_spatial_py code/pipelines/50_spatial_cci/60_pairwise_commot.py
     run_spatial_py code/pipelines/50_spatial_cci/70_lr_overlap_river.py
     run_spatial_py code/pipelines/50_spatial_cci/80_corneto_mapk.py

@@ -17,14 +17,12 @@ this_script <- normalizePath(
 source(file.path(dirname(this_script), "config.R"))
 config <- ensure_output_dirs(scrna_cm02_config(this_script))
 setwd(config$project_root)
+source(file.path(config$project_root, "code", "lib", "R", "runtime_flags.R"))
 options(future.globals.maxSize = 60 * 1024^3)
 future::plan(future::sequential)
 set_recorded_seed(config, "raw_ingest", "matrix_construction")
 uncurated_path <- config$atlas_paths$uncurated
-resume_uncurated <- identical(
-  Sys.getenv("LIUF_RESUME_ATLAS", unset = "1"),
-  "1"
-)
+resume_uncurated <- resume_enabled("LIUF_RESUME_ATLAS")
 
 for (path in unlist(config$raw_paths, use.names = FALSE)) {
   assert_production_input(config, path)

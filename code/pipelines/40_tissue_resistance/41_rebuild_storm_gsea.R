@@ -141,7 +141,22 @@ write_tsv(
   file.path(result_dir, "storm_limma_rank.tsv")
 )
 
+storm_msigdb_version <- Sys.getenv("STORM_MSIGDB_VERSION", unset = "2025.1.Hs")
+storm_msigdb_cache <- file.path(
+  tools::R_user_dir("msigdbr", which = "cache"),
+  "msigdb.2025.1.Hs.rds"
+)
+if (!file.exists(storm_msigdb_cache) ||
+    unname(tools::md5sum(storm_msigdb_cache)) !=
+      "d898c396b109d61ef9b20b0632f0bfa7") {
+  stop("The validated local MSigDB 2025.1.Hs cache is missing or invalid; no download is permitted.")
+}
 msigdb <- msigdbr::msigdbr(species = "Homo sapiens")
+observed_msigdb_version <- unique(msigdb$db_version)
+if (length(observed_msigdb_version) != 1L ||
+    !identical(observed_msigdb_version, storm_msigdb_version)) {
+  stop("Unexpected MSigDB release: ", paste(observed_msigdb_version, collapse = ";"))
+}
 gene_set <- function(name) {
   unique(msigdb$gene_symbol[msigdb$gs_name == name])
 }
@@ -161,6 +176,16 @@ term_to_gene <- dplyr::bind_rows(lapply(
 write_tsv(
   term_to_gene,
   file.path(result_dir, "storm_msigdb_gene_sets.tsv")
+)
+write_tsv(
+  data.frame(
+    db_version = observed_msigdb_version,
+    msigdbr_package_version = as.character(packageVersion("msigdbr")),
+    gene_sets_sha256 = unname(tools::sha256sum(
+      file.path(result_dir, "storm_msigdb_gene_sets.tsv")
+    ))
+  ),
+  file.path(result_dir, "storm_msigdb_version.tsv")
 )
 
 BiocParallel::register(BiocParallel::SerialParam(), default = TRUE)

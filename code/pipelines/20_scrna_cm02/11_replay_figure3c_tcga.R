@@ -161,7 +161,7 @@ fwrite(
 message(
   sprintf(
     paste0(
-      "Figure 3C replay complete: n=%d, events=%d, ",
+      "CM02 survival statistics complete: n=%d, events=%d, ",
       "cut=%.8f, HR(high vs low)=%.6f, p=%.12g"
     ),
     nrow(categorized),

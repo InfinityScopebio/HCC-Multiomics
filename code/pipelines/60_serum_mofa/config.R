@@ -38,9 +38,7 @@ load_pipeline_config <- function() {
   } else {
     file.path(project_root, "audit")
   }
-  panel_dir <- file.path(result_dir, "panels")
-  supplemental_panel_dir <- file.path(result_dir, "supplemental_panels")
-  model_dir <- file.path(canonical_result_dir, "models")
+  model_dir <- file.path(result_dir, "models")
   fast_model_dir <- file.path(model_dir, "k_scan_fast1000")
   final_model_dir <- file.path(model_dir, "final_slow2000")
   replay_model_dir <- file.path(model_dir, "repeatability")
@@ -68,8 +66,6 @@ load_pipeline_config <- function() {
   for (path in c(
     result_dir,
     audit_dir,
-    panel_dir,
-    supplemental_panel_dir,
     model_dir,
     fast_model_dir,
     final_model_dir,
@@ -87,15 +83,13 @@ load_pipeline_config <- function() {
     analysis_source = analysis_source,
     is_raw_derived_analysis = analysis_source == "raw_derived",
     audit_dir = audit_dir,
-    panel_dir = panel_dir,
-    supplemental_panel_dir = supplemental_panel_dir,
     model_dir = model_dir,
     fast_model_dir = fast_model_dir,
     final_model_dir = final_model_dir,
     replay_model_dir = replay_model_dir,
     log_dir = file.path(result_dir, "logs"),
     raw_input_path = file.path(
-      canonical_result_dir,
+      result_dir,
       "incdec_input_rebuilt.rds"
     ),
     article_input_path = file.path(historical_boundary_dir, "incdec_input.rds"),
@@ -118,7 +112,7 @@ load_pipeline_config <- function() {
       "incdec_mofa_K15_seed1_slow2000.metadata.tsv"
     ),
     raw_k_scan_summary_path = file.path(
-      canonical_result_dir,
+      result_dir,
       "k_scan_fast1000_summary_raw_derived.tsv"
     ),
     analysis_model_path = if (analysis_source == "raw_derived") {
@@ -128,7 +122,7 @@ load_pipeline_config <- function() {
     },
     analysis_k_scan_summary_path = if (analysis_source == "raw_derived") {
       file.path(
-        canonical_result_dir,
+        result_dir,
         "k_scan_fast1000_summary_raw_derived.tsv"
       )
     } else {

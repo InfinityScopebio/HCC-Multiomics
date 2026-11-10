@@ -27,7 +27,6 @@ source(file.path(dirname(normalizePath(
 seed <- configure_reproducibility()
 root <- project_root()
 result_root <- spatial_result_root()
-weight_root <- assert_production_path(file.path(result_root, "rctd", "weights"))
 atlas_path <- assert_production_path(
   file.path(
     root,
@@ -258,7 +257,7 @@ build_covarnet_reference <- function() {
     sep = "\t"
   )
 
-  retained_states <- state_statistics[dropped == FALSE, subCluster]
+  retained_states <- rownames(normalized_frequency)[!rownames(normalized_frequency) %in% state_statistics[dropped == TRUE, subCluster]]
   missing_anchors <- setdiff(cm02_covarnet_types(), retained_states)
   if (length(missing_anchors) > 0L) {
     stop(
@@ -480,7 +479,7 @@ reference$ann <- reference$ann[
 rownames(reference$ann) <- factor_states
 
 recover_section <- function(section) {
-  weight_path <- file.path(weight_root, paste0(section, "_weights.rds"))
+  weight_path <- active_rctd_weight_path(section)
   if (!file.exists(weight_path)) {
     stop("Missing production RCTD weights: ", weight_path)
   }
@@ -717,9 +716,9 @@ fwrite(
     rctd_source = rctd_source(),
     n_spots = nrow(recovered),
     n_cm02_positive = sum(recovered$maxCM == "CM02"),
-    article_equivalent = FALSE
+    article_equivalent = identical(rctd_source(), "historical_frozen")
   ),
-  file.path(output_root, "raw_rctd_recovery_summary.tsv"),
+  file.path(output_root, "rctd_recovery_summary.tsv"),
   sep = "\t"
 )
 writeLines(capture.output(sessionInfo()), file.path(output_root, "sessionInfo.txt"))

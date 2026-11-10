@@ -11,12 +11,18 @@ script_dir <- dirname(
   )
 )
 source(file.path(script_dir, "config.R"))
+source(file.path(script_dir, "raw_audit_contract.R"))
 cfg <- load_pipeline_config()
+if (isTRUE(cfg$is_raw_derived_analysis)) {
+  stop("61_finalize_core_audit.R requires article analysis mode.")
+}
 require_historical_mofa_boundary(cfg)
+model_sha256 <- sha256_file(cfg$analysis_model_path)
+input_sha256 <- sha256_file(cfg$raw_input_path)
 
 audit_paths <- c(
   boundary = file.path(cfg$audit_dir, "mofa_historical_boundary_validation.tsv"),
-  article_replay = file.path(cfg$audit_dir, "mofa_article_boundary_replay.tsv"),
+  article_replay = file.path(cfg$audit_dir, "mofa_article_boundary_audit.tsv"),
   input = file.path(cfg$audit_dir, "mofa_incdec_input_comparison.tsv"),
   projection = file.path(cfg$audit_dir, "mofa_tcga_projection_audit.tsv"),
   survival = file.path(cfg$audit_dir, "mofa_tcga_survival_audit.tsv"),
@@ -29,24 +35,19 @@ classifier_seed_path <- file.path(
 )
 require_local_files(c(audit_paths, classifier_seed_path))
 audits <- lapply(audit_paths, fread)
-
-failure_pattern <- "fail|mismatch|error|missing|not_run|incomplete"
-failures <- rbindlist(lapply(names(audits), function(audit_name) {
-  table <- copy(audits[[audit_name]])
-  if (!"status" %in% names(table)) {
-    stop("Audit table lacks status column: ", audit_name)
-  }
-  table[, audit := audit_name]
-  table[grepl(failure_pattern, status, ignore.case = TRUE)]
-}), fill = TRUE)
-if (nrow(failures) > 0L) {
-  stop(
-    "Core audit contains failures:\n",
-    paste(failures$audit, failures$status, sep = "=", collapse = "\n")
-  )
+audits$classifier_seed <- fread(classifier_seed_path)
+assert_article_audit_contract(audits)
+for (name in c("projection", "survival", "supplemental")) {
+  validate_source_hashes(name, audits, model_sha256, input_sha256)
 }
-if (!all(audits$boundary$status == "PASS")) {
-  stop("Historical-boundary contract did not pass.")
+classifier_runtime <- fread(file.path(
+  cfg$result_dir,
+  "factor2_classifier_runtime.tsv"
+))
+if (nrow(classifier_runtime) != 1L ||
+    classifier_runtime$final_model_sha256[[1L]] != model_sha256 ||
+    classifier_runtime$raw_input_sha256[[1L]] != input_sha256) {
+  stop("Classifier runtime is bound to another model or input.")
 }
 
 seed_audit <- rbind(
@@ -179,7 +180,9 @@ production_files <- list.files(
 )
 production_files <- production_files[
   file.info(production_files)$isdir %in% FALSE &
-    !grepl("/logs/", production_files, fixed = TRUE)
+    !grepl("/logs/", production_files, fixed = TRUE) &
+    !grepl("/raw_to_figure/", production_files, fixed = TRUE) &
+    !grepl("/models/", production_files, fixed = TRUE)
 ]
 output_checksums <- data.table(
   path = normalizePath(production_files, mustWork = TRUE),
@@ -195,7 +198,7 @@ report <- c(
   "",
   "## Verdict",
   "",
-  "PASS. Historical K-scan and native K15 inputs passed checksum validation, followed by local downstream numerical recomputation.",
+  "Article-boundary downstream audit PASS. Historical K-scan and native K15 inputs passed checksum validation, followed by local downstream numerical recomputation. This is not a raw-training verdict.",
   "",
   "## Historical boundary",
   "",
@@ -218,7 +221,7 @@ writeLines(report, file.path(cfg$audit_dir, "MOFA_CORE_AUDIT.md"))
 writeLines(capture.output(sessionInfo()), file.path(cfg$audit_dir, "mofa_session_info.txt"))
 
 cat(
-  "Serum MOFA core computation audit PASS; checksummed",
+  "Article-boundary downstream audit PASS; checksummed",
   nrow(output_checksums),
   "production files.\n"
 )

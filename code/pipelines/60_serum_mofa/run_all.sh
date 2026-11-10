@@ -8,12 +8,29 @@ liuf_init_repro_env "${PROJECT_ROOT}"
 source "${PROJECT_ROOT}/code/lib/shell/bounded_worker_pool.sh"
 
 PIPELINE_DIR="${PROJECT_ROOT}/code/pipelines/60_serum_mofa"
-RESULT_DIR="${PROJECT_ROOT}/results/60_serum_mofa"
+CANONICAL_RESULT_DIR="${PROJECT_ROOT}/results/60_serum_mofa"
+RESULT_DIR="${CANONICAL_RESULT_DIR}"
+if [[ "${MOFA_ANALYSIS_SOURCE:-article}" == "raw_derived" ]]; then
+  RESULT_DIR="${CANONICAL_RESULT_DIR}/raw_to_figure"
+fi
 LOG_DIR="${RESULT_DIR}/logs"
 RSCRIPT="${LIUF_RSCRIPT}"
 MOFA_WORKERS="${MOFA_WORKERS:-4}"
 MOFA_FORCE_RETRAIN="${MOFA_FORCE_RETRAIN:-0}"
 MOFA_RUN_RAW_DIAGNOSTIC="${MOFA_RUN_RAW_DIAGNOSTIC:-0}"
+MOFA_ANALYSIS_SOURCE="${MOFA_ANALYSIS_SOURCE:-article}"
+if [[ "${MOFA_ANALYSIS_SOURCE}" != "article" && "${MOFA_ANALYSIS_SOURCE}" != "raw_derived" ]]; then
+  liuf_fail "MOFA_ANALYSIS_SOURCE must be article or raw_derived."
+fi
+for variable in MOFA_RUN_RAW_DIAGNOSTIC MOFA_FORCE_RETRAIN; do
+  if [[ "${!variable}" != "0" && "${!variable}" != "1" ]]; then
+    liuf_fail "${variable} must be 0 or 1."
+  fi
+done
+if [[ "${MOFA_ANALYSIS_SOURCE}" == "article" && "${MOFA_RUN_RAW_DIAGNOSTIC}" == "1" ]]; then
+  liuf_fail "Raw MOFA retraining requires MOFA_ANALYSIS_SOURCE=raw_derived."
+fi
+export MOFA_ANALYSIS_SOURCE
 MOFA_PERM_B="${MOFA_PERM_B:-1000}"
 RUNTIME_FILE="${RESULT_DIR}/pipeline_stage_runtime.tsv"
 
@@ -59,9 +76,13 @@ train_model() {
 
 export PROJECT_ROOT PIPELINE_DIR RESULT_DIR LOG_DIR
 
-run_stage "05_materialize_historical_boundary.R"
+if [[ "${MOFA_ANALYSIS_SOURCE}" != "raw_derived" ]]; then
+  run_stage "05_materialize_historical_boundary.R"
+fi
 run_stage "10_rebuild_incdec_input.R"
-run_stage "18_article_k_scan_and_variance.R"
+if [[ "${MOFA_ANALYSIS_SOURCE}" != "raw_derived" ]]; then
+  run_stage "18_article_k_scan_and_variance.R"
+fi
 
 if [[ "${MOFA_RUN_RAW_DIAGNOSTIC}" == "1" ]]; then
   training_started="$(date +%s)"
@@ -116,6 +137,10 @@ printf '%s\t%s\t%s\t%s\n' \
   >>"${RUNTIME_FILE}"
 
 run_stage "50_supplemental_tables.R"
-run_stage "61_finalize_core_audit.R"
+if [[ "${MOFA_ANALYSIS_SOURCE}" == "raw_derived" ]]; then
+  run_stage "61_finalize_raw_audit.R"
+else
+  run_stage "61_finalize_core_audit.R"
+fi
 
 echo "[serum-mofa] complete"

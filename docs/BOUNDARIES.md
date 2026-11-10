@@ -13,7 +13,9 @@ data/curation/spatial/CoVarNet/cm_network.rds
 
 The default spatial stage does not refit those 18 objects. The explicit
 `LIUF_SPATIAL_RUN_VARIANT=raw_rctd_diagnostic` branch recomputes RCTD and writes
-to the diagnostic result root.
+to the diagnostic result root. Article-equivalent provenance does not assert
+byte-level identity of newly computed COMMOT caches or CCI tables with historical
+validation targets; numerical comparisons are evaluated separately.
 
 The article-used positive-flow CORNETO topology has a separate manifest,
 `config/manifests/spatial_historical_corneto.tsv`:
@@ -41,6 +43,25 @@ The default downstream branch uses this historical native K=15 model. Raw
 retraining requires the M0 serum matrices and never falls back to this model
 when a requested raw model is missing or has invalid provenance.
 
+Raw-derived execution skips historical materialization, article replay, and the
+article finalizer. `61_finalize_raw_audit.R` instead validates the current
+model grid and final/replay metadata, binds downstream audits to the same input
+and model hashes, and writes `mofa_raw_verdict.tsv`, `mofa_raw_check_status.tsv`,
+`mofa_raw_output_checksums.tsv`, and `MOFA_RAW_AUDIT.md`. Article numerical
+equivalence is established only when every designated numerical check is exact;
+other completed results are explicitly diagnostic differences. Running with
+`MOFA_RUN_RAW_DIAGNOSTIC=0` audits existing raw outputs and is not a fresh
+rebuild.
+
+## CM02 downstream manifests
+
+`config/manifests/cm02_historical_downstream.tsv` and
+`config/manifests/supplemental2_rank_survey_historical.tsv` document historical
+CM02 inputs. `code/pipelines/20_scrna_cm02/10_materialize_historical_downstream.R`
+and `20_materialize_supplemental2_rank.R` validate and materialize those declared
+boundaries when historical replay is explicitly requested; they are not silently
+used by the raw-derived runner.
+
 ## Validation-only targets
 
 Some MOFA downstream scripts compare newly calculated results with historical
@@ -51,8 +72,8 @@ data/validation/frozen_targets/MOFA/
 ```
 
 These files are needed only for full article-equivalence audits. They are not
-production substitutes for model fitting. Numeric comparisons are retained in
-this workflow repository; figure/pixel comparisons are not included.
+production substitutes for model fitting. Numerical comparisons and execution
+records are retained as tables.
 
 ## Generated output locations
 
@@ -68,7 +89,7 @@ this workflow repository; figure/pixel comparisons are not included.
   COMMOT caches, patient-balanced CCI and CORNETO routes.
 - `results/60_serum_mofa`: MOFA models, TCGA axes, survival, classifier
   and supplemental tables.
-- `repo/audit`: input hashes, seed declarations, runtimes and repeatability
+- `audit/`: input hashes, seed declarations, runtimes and repeatability
   receipts.
 
 These directories are ignored by Git so local measurements and generated

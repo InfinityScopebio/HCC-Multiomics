@@ -82,13 +82,13 @@ audit <- data.table(
 )
 fwrite(
   audit,
-  file.path(cfg$audit_dir, "mofa_article_boundary_replay.tsv"),
+  file.path(cfg$audit_dir, "mofa_article_boundary_audit.tsv"),
   sep = "\t"
 )
 
 cat(
   sprintf(
-    "Historical MOFA replay ready: K15 mean-view VE %.3f%%; model %s.\n",
+    "Historical MOFA boundary validated: K15 mean-view VE %.3f%%; model %s.\n",
     selected$mean_view_ve,
     sha256_file(cfg$article_model_path)
   )

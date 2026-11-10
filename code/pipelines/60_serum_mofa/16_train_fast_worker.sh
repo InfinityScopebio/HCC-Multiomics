@@ -12,7 +12,11 @@ source "${PROJECT_ROOT}/code/lib/shell/repro_env.sh"
 liuf_init_repro_env "${PROJECT_ROOT}"
 
 PIPELINE_DIR="${PROJECT_ROOT}/code/pipelines/60_serum_mofa"
-RESULT_DIR="${PROJECT_ROOT}/results/60_serum_mofa"
+CANONICAL_RESULT_DIR="${PROJECT_ROOT}/results/60_serum_mofa"
+RESULT_DIR="${CANONICAL_RESULT_DIR}"
+if [[ "${MOFA_ANALYSIS_SOURCE:-article}" == "raw_derived" ]]; then
+  RESULT_DIR="${CANONICAL_RESULT_DIR}/raw_to_figure"
+fi
 LOG_DIR="${RESULT_DIR}/logs"
 RSCRIPT="${LIUF_RSCRIPT}"
 k="$1"

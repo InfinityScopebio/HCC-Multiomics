@@ -55,7 +55,6 @@ class ProjectPaths:
 class ValidationConfig:
     absolute_tolerance: float
     relative_tolerance: float
-    render_error_fraction: float
     require_sample_order: bool
     require_feature_order: bool
 
@@ -112,9 +111,6 @@ def load_project_config(config_path: Path | None = None) -> ProjectConfig:
     validation = ValidationConfig(
         absolute_tolerance=float(validation_raw["numeric_absolute_tolerance"]),
         relative_tolerance=float(validation_raw["numeric_relative_tolerance"]),
-        render_error_fraction=float(
-            validation_raw.get("render_absolute_error_fraction", 0.001)
-        ),
         require_sample_order=bool(validation_raw["require_sample_order"]),
         require_feature_order=bool(validation_raw["require_feature_order"]),
     )

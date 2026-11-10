@@ -118,6 +118,29 @@ def cellchat_database(config: SpatialConfig) -> pd.DataFrame:
     return database[["ligand", "receptor", "pathway", "annotation"]]
 
 
+def input_provenance(config: SpatialConfig, section: str) -> dict[str, Any]:
+    section_dir = config.visium_dir(section)
+    return {
+        "cache_version": config.active_commot_cache_version,
+        "rctd_source": config.rctd_source,
+        "visium_matrix_sha256": sha256_file(
+            section_dir / "filtered_feature_bc_matrix.h5"
+        ),
+        "positions_sha256": sha256_file(
+            section_dir / "spatial/tissue_positions_list.csv"
+        ),
+        "rctd_weights_sha256": sha256_file(config.active_weight_rds(section)),
+        "cm_recovery_sha256": sha256_file(config.cm_recovery_with_barcode_rds),
+        "cellchat_db_sha256": sha256_file(
+            config.commot_root / "cellchat_ligrec_full.csv"
+        ),
+        "script_sha256": sha256_file(Path(__file__).resolve()),
+        "section_seed": section_seed(config, section),
+        "commot_version": getattr(ct, "__version__", "unknown"),
+        "scanpy_version": sc.__version__,
+    }
+
+
 def numeric_fingerprint(
     config: SpatialConfig,
     adata: sc.AnnData,
@@ -166,6 +189,7 @@ def run_section(
     database: pd.DataFrame,
 ) -> tuple[Path, dict[str, Any]]:
     current_seed = section_seed(config, section)
+    provenance = input_provenance(config, section)
     random.seed(current_seed)
     np.random.seed(current_seed)
     adata = load_raw_visium(config, section)
@@ -219,6 +243,7 @@ def run_section(
     )
     adata.uns["cci_cache_version"] = config.active_commot_cache_version
     adata.uns["rctd_source"] = config.rctd_source
+    adata.uns["cci_input_provenance"] = provenance
     adata.uns["article_equivalent"] = config.article_equivalent
     adata.uns["commot_heteromeric"] = True
     adata.uns["commot_heteromeric_rule"] = HETEROMERIC_RULE
@@ -313,10 +338,8 @@ def main() -> None:
         output_path = config.commot_cache(section)
         if output_path.is_file() and not arguments.force:
             cached = sc.read_h5ad(output_path)
-            if (
-                str(cached.uns.get("cci_cache_version", ""))
-                == config.active_commot_cache_version
-            ):
+            expected_provenance = input_provenance(config, section)
+            if cached.uns.get("cci_input_provenance") == expected_provenance:
                 fingerprints.append(
                     numeric_fingerprint(
                         config,
@@ -325,8 +348,9 @@ def main() -> None:
                         cache_path=output_path,
                     )
                 )
-                print(f"{section}: cached production COMMOT")
+                print(f"{section}: cached production COMMOT with matching provenance")
                 continue
+            print(f"{section}: COMMOT cache provenance changed; recomputing")
         _, fingerprint = run_section(
             config,
             section,

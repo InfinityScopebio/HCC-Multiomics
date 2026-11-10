@@ -18,6 +18,7 @@ this_script <- normalizePath(
 source(file.path(dirname(this_script), "config.R"))
 config <- ensure_output_dirs(scrna_cm02_config(this_script))
 setwd(config$project_root)
+source(file.path(config$project_root, "code", "lib", "R", "runtime_flags.R"))
 options(future.globals.maxSize = 60 * 1024^3)
 future::plan(future::sequential)
 assert_production_input(config, config$atlas_paths$integrated)
@@ -41,7 +42,7 @@ run_subcluster <- function(
     paste0(stage, "_uncurated_raw_derived.rds")
   )
   if (
-    identical(Sys.getenv("LIUF_RESUME_SUBCLUSTERS", unset = "1"), "1") &&
+    resume_enabled("LIUF_RESUME_SUBCLUSTERS") &&
       file.exists(checkpoint_path)
   ) {
     message("Resuming ", stage, " from pre-curation checkpoint.")

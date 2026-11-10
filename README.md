@@ -38,16 +38,18 @@ control.
 ## Requirements
 
 - R 4.5 or newer; the validated article runtime was R 4.5.2.
-- Python for general workflows and a separate environment containing scanpy,
-  COMMOT, and CORNETO for spatial analysis.
+- General Python 3.11 or newer (`tomllib`); the validated general runtime was
+  Python 3.12.2.
+- A separate spatial environment containing scanpy, COMMOT, and CORNETO with
+  the versions checked by `run_core.sh`.
 - Local inputs arranged as described in `docs/INPUTS.md` and
   `docs/BOUNDARIES.md`.
 
-Package versions are recorded in:
-
-- `code/env/R_packages.tsv` and `code/env/R_sessionInfo.txt`
-- `code/env/python_base_freeze.txt`
-- `code/env/python_c2l_freeze.txt`
+See `code/env/README.md` for validated versions, installation commands, and the
+R library search path. Package inventories are in `code/env/R_packages.tsv`,
+`code/env/R_sessionInfo.txt`, `code/env/python_base_freeze.txt`, and
+`code/env/python_c2l_freeze.txt`. Repository-original code is distributed under
+the MIT License in `LICENSE`; upstream terms are summarized in `NOTICE.md`.
 
 Runtime overrides:
 
@@ -91,14 +93,23 @@ bash run_core.sh spatial
 LIUF_SPATIAL_RUN_VARIANT=raw_rctd_diagnostic bash run_core.sh spatial
 
 # Retrain the MOFA K grid and final/replay K=15 models
-MOFA_RUN_RAW_DIAGNOSTIC=1 MOFA_FORCE_RETRAIN=1 MOFA_WORKERS=4 \
-  bash run_core.sh serum_mofa
+MOFA_ANALYSIS_SOURCE=raw_derived MOFA_RUN_RAW_DIAGNOSTIC=1 \
+  MOFA_FORCE_RETRAIN=1 MOFA_WORKERS=4 bash run_core.sh serum_mofa
 ```
 
+Raw atlas, raw-RCTD, and main COMMOT stages default to fresh computation.
+Set `LIUF_RESUME_ATLAS=1` and `LIUF_RESUME_SUBCLUSTERS=1` only when checkpoint
+reuse is intentional. Direct COMMOT use without `--force` additionally requires
+an exact match of the cached input, code, database, seed, and package
+provenance.
+
 The default MOFA downstream branch uses the declared historical K=15 article
-model. After raw retraining, set `MOFA_ANALYSIS_SOURCE=raw_derived` to calculate
-downstream results from the new model. Diagnostic results require a separate
-numerical equivalence assessment before being compared with article values.
+model. Use `MOFA_ANALYSIS_SOURCE=raw_derived` for the new model. Raw mode skips
+historical materialization, article replay, and the article finalizer; its
+separate audit reports execution completion, article numerical equivalence, and
+diagnostic differences. `MOFA_RUN_RAW_DIAGNOSTIC=0` is an audit of existing raw
+outputs, not a fresh rebuild. Diagnostic results require a separate numerical
+equivalence assessment before being compared with article values.
 
 ## Random seeds
 
@@ -141,6 +152,8 @@ See `docs/BOUNDARIES.md` for paths and manifests.
 
 ```bash
 python3 -m unittest discover -s code/tests -p 'test_*.py' -v
+
+Rscript code/tests/test_raw_audit_contract.R
 
 Rscript -e 'files <- list.files("code", pattern="[.]R$", recursive=TRUE, full.names=TRUE); for (f in files) parse(f); cat(length(files), "R scripts parsed\n")'
 
